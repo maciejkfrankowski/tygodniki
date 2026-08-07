@@ -1,6 +1,6 @@
 # Tygodniki Lokalne — warsztat (v2.2)
 
-Format wzorowany na kolinko.eu: kuratorskie leady (do 7 zdań) + klikalne źródła + stałe rubryki,
+Format  kuratorskie leady (do 7 zdań) + klikalne źródła + stałe rubryki,
 15 sekcji układu weekendowego, rotacje reklam i fallbacki.
 
 ## Struktura
