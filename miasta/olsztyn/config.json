@@ -1,0 +1,85 @@
+{
+  "miasto": "Olsztyn",
+  "tytul": "Tygodnik Olsztyński",
+  "plik": "olsztyn.html",
+  "sekcje_override": {},
+  "zrodla": {
+    "administracja": [
+      {"nazwa": "Urząd Miasta", "url": "https://olsztyn.eu/", "status": "ok", "typ": "strona"},
+      {"nazwa": "BIP Olsztyn", "url": "https://bip.olsztyn.eu/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Urząd Wojewódzki", "url": "https://www.gov.pl/web/uw-warminsko-mazurski", "status": "ok", "typ": "strona"},
+      {"nazwa": "Marszałek (Wrota)", "url": "https://warmia.mazury.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Miejski Urząd Pracy", "url": "https://mupolsztyn.praca.gov.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Powiatowy UP", "url": "https://uppolsztyn.praca.gov.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "GUS BDL", "url": "https://bdl.stat.gov.pl/", "status": "ok", "typ": "api"},
+      {"nazwa": "LGD Południowa Warmia", "url": "https://poludniowawarmia.pl/", "status": "ok", "typ": "strona"}
+    ],
+    "infrastruktura": [
+      {"nazwa": "ZDZiT (rozkłady)", "url": "https://zdzit.olsztyn.eu/", "status": "ok", "typ": "strona"},
+      {"nazwa": "MPK Olsztyn", "url": "https://www.mpkolsztyn.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Bilety Mobilet", "url": "https://mobilet.eu/pl/miasta/olsztyn/", "status": "ok", "typ": "strona"},
+      {"nazwa": "PKP (portal pasażera)", "url": "https://portalpasazera.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "PWiK (woda)", "url": "https://pwik.olsztyn.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Energa-Operator (prąd)", "url": "https://www.energa-operator.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "ZGOK (odpady)", "url": "https://zgok.olsztyn.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "SM Pojezierze", "url": "https://smp.olsztyn.pl/", "status": "ok", "typ": "strona"}
+    ],
+    "bezpieczenstwo": [
+      {"nazwa": "Komenda Miejska Policji", "url": "https://olsztyn.policja.gov.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "PSSE", "url": "https://www.gov.pl/web/psse-olsztyn", "status": "ok", "typ": "strona"},
+      {"nazwa": "WSSE", "url": "https://www.gov.pl/web/wsse-olsztyn", "status": "ok", "typ": "strona"},
+      {"nazwa": "Nocna opieka (NFZ)", "url": "https://www.nfz-olsztyn.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Szpitale (WSS/MSZ)", "url": null, "status": "warn", "typ": "strona"},
+      {"nazwa": "Powiatowy Lekarz Weterynarii", "url": null, "status": "todo", "typ": "strona"}
+    ],
+    "srodowisko": [
+      {"nazwa": "RDOŚ Olsztyn", "url": "https://www.gov.pl/web/rdos-olsztyn", "status": "ok", "typ": "strona"},
+      {"nazwa": "WIOŚ Olsztyn", "url": "https://www.gov.pl/web/wios-olsztyn", "status": "ok", "typ": "strona"},
+      {"nazwa": "Wody Polskie (ZZ Olsztyn)", "url": "https://www.gov.pl/web/wody-polskie", "status": "ok", "typ": "strona"},
+      {"nazwa": "Nadleśnictwo Olsztyn", "url": "https://olsztyn.olsztyn.lasy.gov.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "IMGW", "url": "https://meteo.imgw.pl/", "status": "ok", "typ": "api"},
+      {"nazwa": "Jakość powietrza (GIOŚ)", "url": "https://powietrze.gios.gov.pl/", "status": "ok", "typ": "api"}
+    ],
+    "nieruchomosci": [
+      {"nazwa": "Licytacje komornicze", "url": "https://licytacje.komornik.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "RCiWN (BIP)", "url": "https://bip.olsztyn.eu/", "status": "warn", "typ": "strona"},
+      {"nazwa": "WUOZ Olsztyn", "url": "https://www.wuoz.olsztyn.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Mapa inwestycji (GIS)", "url": "https://msipmo.olsztyn.eu/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Komisy / OLX", "url": null, "status": "todo", "typ": "ai"}
+    ],
+    "edukacja": [
+      {"nazwa": "Żłobki miejskie (ZŻM)", "url": "https://zzmolsztyn.bip.gov.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Edukacja miasta", "url": "https://edukacja.olsztyn.eu/", "status": "ok", "typ": "strona"},
+      {"nazwa": "UWM", "url": "https://www.uwm.edu.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "UTW", "url": "https://utw.olsztyn.pl/", "status": "ok", "typ": "strona"}
+    ],
+    "kultura": [
+      {"nazwa": "MOK", "url": "https://mok.olsztyn.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Teatr Jaracza", "url": "https://teatr.olsztyn.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Teatr Lalek", "url": "https://teatrlalek.olsztyn.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Filharmonia", "url": "https://filharmonia.olsztyn.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "BWA", "url": "https://www.bwa.olsztyn.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Muzeum Warmii i Mazur", "url": "https://muzeum.olsztyn.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Planetarium", "url": "https://planetarium.olsztyn.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Kina (repertuary)", "url": "https://www.filmweb.pl/showtimes/Olsztyn", "status": "ok", "typ": "strona"},
+      {"nazwa": "OSiR / sport", "url": "https://www.osir.olsztyn.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Indykpol AZS", "url": "https://www.energaindykpolazs.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Stomil", "url": "https://stomilolsztyn.com/", "status": "ok", "typ": "strona"}
+    ],
+    "handel_spolecznosc": [
+      {"nazwa": "Parafie (archwarmia)", "url": "https://archwarmia.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Posłaniec Warmiński", "url": "https://olsztyn.gosc.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Spotted / grupy FB", "url": null, "status": "todo", "typ": "fb"},
+      {"nazwa": "Rzecznik Konsumentów", "url": "https://olsztyn.eu/", "status": "warn", "typ": "strona"},
+      {"nazwa": "Targowiska / piekarnie", "url": null, "status": "todo", "typ": "offline"}
+    ],
+    "media_archiwum": [
+      {"nazwa": "Gazeta Olsztyńska", "url": "https://gazetaolsztynska.pl/", "status": "ok", "typ": "rss"},
+      {"nazwa": "Nekrologi (GO)", "url": "https://gazetaolsztynska.pl/nekrologi", "status": "ok", "typ": "strona"},
+      {"nazwa": "Radio Olsztyn", "url": "https://radioolsztyn.pl/", "status": "ok", "typ": "rss"},
+      {"nazwa": "TKO", "url": "https://tko.pl/", "status": "ok", "typ": "rss"},
+      {"nazwa": "WM.pl", "url": "https://wm.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Biblioteka Cyfrowa (WMBC)", "url": "https://wmbc.olsztyn.pl/", "status": "ok", "typ": "strona"}
+    ]
+  }
+}
