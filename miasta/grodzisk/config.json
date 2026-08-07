@@ -1,0 +1,81 @@
+{
+  "miasto": "Grodzisk Mazowiecki",
+  "tytul": "Tygodnik Grodziski",
+  "plik": "grodzisk.html",
+  "sekcje_override": {"3": {"wypady_Warszawa": true}},
+  "zrodla": {
+    "administracja": [
+      {"nazwa": "Urząd Miejski", "url": "https://grodzisk.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "BIP Grodzisk", "url": "https://bip.grodzisk.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "e-Urząd", "url": "https://e-urzad.grodzisk.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Starostwo Powiatowe", "url": "https://www.powiat-grodziski.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Mazovia (marszałek)", "url": "https://mazovia.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "PUP Grodzisk Maz.", "url": "https://praca.gov.pl/", "status": "todo", "typ": "strona"},
+      {"nazwa": "GUS BDL", "url": "https://bdl.stat.gov.pl/", "status": "ok", "typ": "api"},
+      {"nazwa": "LGD Zielone Sąsiedztwo", "url": null, "status": "warn", "typ": "strona", "notatka": "zweryfikować URL"}
+    ],
+    "infrastruktura": [
+      {"nazwa": "WKD komunikaty", "url": "https://wkd.com.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "WKD rozkład live", "url": "https://www.rozklad-wkd.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "PKP/KM (portal pasażera)", "url": "https://portalpasazera.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Autobusy GPA", "url": "https://grodzisk.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "ZWiK Grodzisk", "url": "https://zwik-grodzisk.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "PGE Dystrybucja (wyłączenia)", "url": "https://www.pgedystrybucja.pl/wylaczenia", "status": "ok", "typ": "strona"},
+      {"nazwa": "PSZOK / operator odpadów", "url": null, "status": "warn", "typ": "strona", "notatka": "PGK? potwierdzić"},
+      {"nazwa": "Spółdzielnia mieszkaniowa", "url": null, "status": "warn", "typ": "strona"}
+    ],
+    "bezpieczenstwo": [
+      {"nazwa": "KPP Grodzisk Maz.", "url": "https://grodzisk-mazowiecki.policja.gov.pl/", "status": "warn", "typ": "strona", "notatka": "sprawdzić subdomenę"},
+      {"nazwa": "Szpital Zachodni im. św. Jana Pawła II", "url": null, "status": "warn", "typ": "strona", "notatka": "szpitalzachodni.pl?"},
+      {"nazwa": "PSSE Grodzisk Maz.", "url": "https://www.gov.pl/web/psse-grodzisk-mazowiecki", "status": "warn", "typ": "strona"},
+      {"nazwa": "Apteki dyżurne (powiat)", "url": "https://www.powiat-grodziski.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "OSP gminne", "url": null, "status": "todo", "typ": "fb"},
+      {"nazwa": "Powiatowy Lekarz Weterynarii", "url": null, "status": "todo", "typ": "strona"}
+    ],
+    "srodowisko": [
+      {"nazwa": "RDOŚ Warszawa", "url": "https://www.gov.pl/web/rdos-warszawa", "status": "ok", "typ": "strona"},
+      {"nazwa": "WIOŚ Warszawa", "url": "https://www.gov.pl/web/wios-warszawa", "status": "ok", "typ": "strona"},
+      {"nazwa": "Wody Polskie (RZGW Warszawa)", "url": "https://www.gov.pl/web/wody-polskie", "status": "warn", "typ": "strona"},
+      {"nazwa": "Nadleśnictwo Chojnów", "url": null, "status": "warn", "typ": "strona", "notatka": "chojnow.warszawa.lasy.gov.pl?"},
+      {"nazwa": "IMGW", "url": "https://meteo.imgw.pl/", "status": "ok", "typ": "api"},
+      {"nazwa": "Jakość powietrza (GIOŚ)", "url": "https://powietrze.gios.gov.pl/", "status": "ok", "typ": "api"}
+    ],
+    "nieruchomosci": [
+      {"nazwa": "Licytacje komornicze", "url": "https://licytacje.komornik.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "RCiWN (starostwo)", "url": "https://www.powiat-grodziski.pl/", "status": "warn", "typ": "strona"},
+      {"nazwa": "Mazowiecki WUOZ", "url": null, "status": "todo", "typ": "strona"},
+      {"nazwa": "Inwestycje miejskie", "url": "https://grodzisk.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Komisy / OLX", "url": null, "status": "todo", "typ": "ai"}
+    ],
+    "edukacja": [
+      {"nazwa": "Żłobki/przedszkola (BIP)", "url": "https://bip.grodzisk.pl/", "status": "warn", "typ": "strona"},
+      {"nazwa": "Seniorzy (PZERiI)", "url": "https://emeryci.grodzisk.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "UTW Grodzisk", "url": null, "status": "warn", "typ": "strona"},
+      {"nazwa": "Kursy/warsztaty (CK)", "url": "https://www.centrumkultury.eu/", "status": "ok", "typ": "strona"}
+    ],
+    "kultura": [
+      {"nazwa": "Centrum Kultury", "url": "https://www.centrumkultury.eu/", "status": "ok", "typ": "strona", "api": "https://www.centrumkultury.eu/wp-json/tribe/events/v1/events/"},
+      {"nazwa": "Kino CK", "url": "https://www.centrumkultury.eu/kino-centrum-kultury/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Kino Wolność", "url": "https://www.centrumkultury.eu/kino-wolnosc/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Biblioteka", "url": "https://biblioteka.grodzisk.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Szachy (festiwal)", "url": "https://szachygrodzisk.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "OSiR / sport", "url": "https://grodzisksport.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Pogoń Grodzisk", "url": "https://pogongrodzisk.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Knajpy / gastro", "url": null, "status": "todo", "typ": "fb"}
+    ],
+    "handel_spolecznosc": [
+      {"nazwa": "Parafie (dekanat, archwwa)", "url": "https://archwwa.pl/", "status": "warn", "typ": "strona"},
+      {"nazwa": "Spotted / grupy FB", "url": null, "status": "todo", "typ": "fb"},
+      {"nazwa": "Rzecznik Konsumentów (powiat)", "url": "https://www.powiat-grodziski.pl/", "status": "warn", "typ": "strona"},
+      {"nazwa": "Targowiska / piekarnie", "url": null, "status": "todo", "typ": "offline"}
+    ],
+    "media_archiwum": [
+      {"nazwa": "Grodzisk News", "url": "https://grodzisknews.pl/", "status": "ok", "typ": "rss"},
+      {"nazwa": "Grodziski24", "url": "https://grodziski24.pl/", "status": "ok", "typ": "rss"},
+      {"nazwa": "Przegląd Regionalny", "url": "https://www.przegladregionalny.pl/", "status": "ok", "typ": "rss"},
+      {"nazwa": "InfoGrodzisk", "url": "https://infogrodzisk.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Nekrologi", "url": null, "status": "warn", "typ": "strona", "notatka": "portale lokalne / zakłady"},
+      {"nazwa": "Zbiory regionalne (biblioteka)", "url": "https://biblioteka.grodzisk.pl/", "status": "warn", "typ": "strona"}
+    ]
+  }
+}
