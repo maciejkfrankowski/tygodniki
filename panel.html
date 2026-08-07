@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Redakcyjny · Tygodniki Lokalne</title>
+<style>
+  :root{--paper:#f6f1e5;--ink:#26241f;--muted:#6d675b;--red:#a8402c;--green:#3f6b4f;
+        --blue:#2f6f9a;--card:#fffdf6;--line:#e3dac4}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 "Segoe UI",system-ui,Arial,sans-serif}
+  .wrap{max-width:960px;margin:0 auto;padding:24px 20px 80px}
+  header{border-bottom:3px solid var(--ink);padding:24px 0 16px;margin-bottom:8px}
+  .kicker{letter-spacing:.18em;font-size:12px;font-weight:700;color:var(--red);text-transform:uppercase;margin:0 0 8px}
+  h1{font-family:Georgia,serif;font-size:34px;margin:0 0 6px}
+  h2{font-family:Georgia,serif;font-size:26px;margin:40px 0 10px}
+  h3{font-family:Georgia,serif;font-size:19px;margin:0 0 6px}
+  nav{position:sticky;top:0;background:var(--paper);border-bottom:1px solid var(--line);
+      padding:10px 0;display:flex;gap:18px;flex-wrap:wrap;z-index:5}
+  nav a{color:var(--blue);font-weight:700;font-size:14px;text-decoration:none}
+  nav a:hover{color:var(--red)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:12px 0}
+  .meta{color:var(--muted);font-size:14px;margin:4px 0}
+  a{color:var(--blue)}
+  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+  .badge{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px}
+  .ok{background:#e2efe2;color:#2c5a37}.warn{background:#f4e6c8;color:#8a5a12}.blueb{background:#dceaf3;color:#20536b}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px}
+  select,button,input{font:inherit;border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:#fff}
+  button{cursor:pointer;background:var(--red);color:#fff;border:none;font-weight:700}
+  button.sec{background:var(--green)}
+  button.del{background:#fff;color:var(--red);border:1px solid var(--red);padding:4px 8px;font-size:12px}
+  ul.check{list-style:none;padding:0;margin:0}
+  ul.check li{border-top:1px dashed var(--line);padding:8px 0}
+  ul.check li:first-child{border-top:0}
+  ul.check label{display:flex;gap:10px;align-items:baseline;cursor:pointer}
+  ul.check input{transform:scale(1.2)}
+  .day{font-weight:700;color:var(--red);min-width:52px;font-size:13px;text-transform:uppercase}
+  li.done label span.txt{color:var(--muted);text-decoration:line-through}
+  ul.src{list-style:none;padding:0;margin:6px 0;font-size:14.5px}
+  ul.src li{padding:5px 0;border-top:1px dashed var(--line)}
+  ul.src li:first-child{border-top:0}
+  .colhead{font-weight:700;color:var(--green);text-transform:uppercase;font-size:12px;letter-spacing:.12em;margin:10px 0 2px}
+  footer{margin-top:50px;border-top:3px solid var(--ink);padding-top:14px;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="kicker">Tygodniki lokalne · warsztat redakcyjny</p>
+  <h1>Panel redakcyjny</h1>
+  <p class="meta">Jedno miejsce na numery, checklistę i źródła. Dane (statusy i odhaczenia) zapisują się
+  w tej przeglądarce — trzymaj wszystkie pliki w jednym folderze.</p>
+</header>
+
+<nav>
+  <a href="#numery">📰 Numery</a>
+  <a href="#checklista">✅ Checklista tygodnia</a>
+  <a href="#zrodla">🔗 ródła</a>
+  <a href="#szablony">🧰 Szablony</a>
+</nav>
+
+<h2 id="numery">📰 Numery</h2>
+<div id="issues"></div>
+<div class="card">
+  <h3>Dodaj nowy numer</h3>
+  <form id="addf" class="row">
+    <input id="nc" placeholder="Miasto (np. Olsztyn)" required>
+    <input id="nw" type="date" value="2026-08-10">
+    <input id="nf" placeholder="plik (np. olsztyn-0810.html)">
+    <button type="submit">+ dodaj</button>
+  </form>
+  <p class="meta">Status zmieniasz selectem na karcie numeru; „Otwórz numer" działa, jeśli plik leży obok panelu.</p>
+</div>
+
+<h2 id="checklista">✅ Checklista tygodnia</h2>
+<div class="card">
+  <ul id="check" class="check"></ul>
+  <p class="row"><button class="sec" id="reset">↺ Nowy tydzień (wyczyść)</button></p>
+</div>
+
+<h2 id="zrodla">🔗 Źródła (biblioteka redakcyjna)</h2>
+<div class="grid2">
+  <div class="card">
+    <h3>Olsztyn</h3>
+    <p class="colhead">Urząd</p><ul class="src">
+      <li><a href="https://olsztyn.eu/" target="_blank">olsztyn.eu</a> · <a href="https://bip.olsztyn.eu/" target="_blank">BIP</a></li></ul>
+    <p class="colhead">Kultura i kino</p><ul class="src">
+      <li><a href="https://mok.olsztyn.pl/" target="_blank">mok.olsztyn.pl</a> · <a href="https://teatr.olsztyn.pl/" target="_blank">Teatr Jaracza</a> · <a href="https://filharmonia.olsztyn.pl/" target="_blank">Filharmonia</a> · <a href="https://planetarium.olsztyn.pl/" target="_blank">Planetarium</a> · <a href="https://www.filmweb.pl/showtimes/Olsztyn" target="_blank">repertuary kin</a></li></ul>
+    <p class="colhead">Transport i byt</p><ul class="src">
+      <li><a href="https://zdzit.olsztyn.eu/" target="_blank">zdzit.olsztyn.eu</a> · <a href="https://www.mpkolsztyn.pl/" target="_blank">mpkolsztyn.pl</a> · <a href="https://www.energa-operator.pl/" target="_blank">Energa (wyłączenia)</a></li></ul>
+    <p class="colhead">Media i sport</p><ul class="src">
+      <li><a href="https://gazetaolsztynska.pl/" target="_blank">Gazeta Olsztyńska</a> · <a href="https://radioolsztyn.pl/" target="_blank">Radio Olsztyn</a> · <a href="https://tko.pl/" target="_blank">TKO</a> · <a href="https://www.osir.olsztyn.pl/" target="_blank">OSiR</a> · <a href="https://www.energaindykpolazs.pl/" target="_blank">Indykpol AZS</a> · <a href="https://stomilolsztyn.com/" target="_blank">Stomil</a></li></ul>
+  </div>
+  <div class="card">
+    <h3>Grodzisk Mazowiecki</h3>
+    <p class="colhead">Urząd</p><ul class="src">
+      <li><a href="https://grodzisk.pl/" target="_blank">grodzisk.pl</a> · <a href="https://bip.grodzisk.pl/" target="_blank">BIP</a> · <a href="https://www.powiat-grodziski.pl/" target="_blank">powiat-grodziski.pl</a></li></ul>
+    <p class="colhead">Kultura i kino</p><ul class="src">
+      <li><a href="https://www.centrumkultury.eu/" target="_blank">centrumkultury.eu</a> · <a href="https://www.centrumkultury.eu/kino-centrum-kultury/" target="_blank">Kino CK</a> · <a href="https://biblioteka.grodzisk.pl/" target="_blank">biblioteka.grodzisk.pl</a> · <a href="https://szachygrodzisk.pl/" target="_blank">szachygrodzisk.pl</a></li></ul>
+    <p class="colhead">Transport i byt</p><ul class="src">
+      <li><a href="https://wkd.com.pl/" target="_blank">wkd.com.pl</a> · <a href="https://www.rozklad-wkd.pl/" target="_blank">rozklad-wkd.pl</a> · <a href="https://zwik-grodzisk.pl/" target="_blank">zwik-grodzisk.pl</a> · <a href="https://www.pgedystrybucja.pl/wylaczenia" target="_blank">PGE (wyłączenia)</a></li></ul>
+    <p class="colhead">Media i sport</p><ul class="src">
+      <li><a href="https://grodzisknews.pl/" target="_blank">Grodzisk News</a> · <a href="https://grodziski24.pl/" target="_blank">Grodziski24</a> · <a href="https://www.przegladregionalny.pl/" target="_blank">Przegląd Regionalny</a> · <a href="https://grodzisksport.pl/" target="_blank">OSiR</a> · <a href="https://pogongrodzisk.pl/" target="_blank">Pogoń</a></li></ul>
+  </div>
+</div>
+
+<h2 id="szablony">🧰 Szablony</h2>
+<div class="card">
+  <p>Pobierz pusty szkielet numeru (HTML w estetyce kolinko.eu) i podmień treść sekcji.</p>
+  <p class="row"><button id="dl">⬇ Pobierz szablon numeru (HTML)</button></p>
+</div>
+
+<footer>Panel redakcyjny · prototyp lokalny · aby działał online, wrzuć folder (panel + numery + img/)
+na GitHub Pages / Netlify. Następne rozszerzenia: RSS‑monitor źródeł, eksport do Beehiiv/Mailchimp.</footer>
+
+</div>
+<script>
+var LS_I='tl_issues', LS_C='tl_check';
+var DEF_I=[
+ {city:'Olsztyn',week:'2026-08-03',status:'gotowy',file:'olsztyn.html'},
+ {city:'Grodzisk Mazowiecki',week:'2026-08-03',status:'gotowy',file:'grodzisk.html'}
+];
+function load(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+var issues=load(LS_I,DEF_I), checks=load(LS_C,{});
+function save(){localStorage.setItem(LS_I,JSON.stringify(issues));localStorage.setItem(LS_C,JSON.stringify(checks))}
+function fmt(w){var d=new Date(w+'T00:00:00');return d.toLocaleDateString('pl-PL',{day:'numeric',month:'long',year:'numeric'})}
+function badge(s){return s==='opublikowany'?'ok':s==='gotowy'?'blueb':'warn'}
+function renderIssues(){
+  var box=document.getElementById('issues');box.innerHTML='';
+  issues.forEach(function(it,i){
+    var c=document.createElement('div');c.className='card';
+    c.innerHTML='<h3>'+it.city+'</h3>'+
+      '<p class="meta">Tydzień od: <b>'+fmt(it.week)+'</b> · <span class="badge '+badge(it.status)+'">'+it.status+'</span></p>'+
+      '<p class="row"><a href="'+it.file+'" target="_blank">Otwórz numer ↗</a>'+
+      '<select class="st" data-i="'+i+'">'+['szkic','gotowy','opublikowany'].map(function(s){
+        return '<option'+(s===it.status?' selected':'')+'>'+s+'</option>'}).join('')+'</select>'+
+      '<button class="del" data-i="'+i+'">usuń</button></p>';
+    box.appendChild(c);
+  });
+}
+document.getElementById('issues').addEventListener('change',function(e){
+  if(e.target.classList.contains('st')){issues[e.target.dataset.i].status=e.target.value;save();renderIssues();}});
+document.getElementById('issues').addEventListener('click',function(e){
+  if(e.target.classList.contains('del')){issues.splice(e.target.dataset.i,1);save();renderIssues();}});
+document.getElementById('addf').addEventListener('submit',function(e){
+  e.preventDefault();
+  var city=document.getElementById('nc').value.trim()||'Nowe miasto';
+  var week=document.getElementById('nw').value||'2026-08-10';
+  var file=document.getElementById('nf').value.trim()||(city.toLowerCase().replace(/\s+/g,'-')+'.html');
+  issues.unshift({city:city,week:week,status:'szkic',file:file});
+  save();renderIssues();e.target.reset();
+});
+var CHECK=[
+ ['śr','Kino: repertuar tygodnia'],
+ ['śr','Kultura: wydarzenia weekendu (CK / MOK / portale biletowe)'],
+ ['czw','Kąpieliska: OSiR + Serwis Kąpieliskowy GIS'],
+ ['czw','Pogoda: ostrzeżenia IMGW na weekend'],
+ ['czw','Transport: WKD / ZDZiT / GPA — komunikaty i zmiany'],
+ ['czw','Prąd i woda: Energa / PGE / ZWiK / PWiK — planowane prace'],
+ ['pt','Urząd: BIP — uchwały, przetargi, ogłoszenia'],
+ ['pt','Sport: OSiR + kluby'],
+ ['pt','Skład: tresc.html (markery SEKCJA:n) + ilustracje'],
+ ['sob','Publikacja: strona / PDF / social media'],
+ ['niedz','Notatki: tematy i zapowiedzi na kolejny numer']
+];
+function renderCheck(){
+  var ul=document.getElementById('check');ul.innerHTML='';
+  CHECK.forEach(function(c,i){
+    var li=document.createElement('li');if(checks[i])li.className='done';
+    li.innerHTML='<label><input type="checkbox" data-i="'+i+'"'+(checks[i]?' checked':'')+'> '+
+      '<span class="day">'+c[0]+'</span><span class="txt">'+c[1]+'</span></label>';
+    ul.appendChild(li);
+  });
+}
+document.getElementById('check').addEventListener('change',function(e){
+  var i=e.target.dataset.i;checks[i]=e.target.checked;save();renderCheck();});
+document.getElementById('reset').addEventListener('click',function(){checks={};save();renderCheck();});
+var TPL='<!DOCTYPE html>\n<html lang="pl">\n<head>\n<meta charset="UTF-8">\n<title>Tygodnik · SZKIC</title>\n'+
+ '<style>body{font:17px/1.65 Segoe UI,Arial;background:#f6f1e5;color:#26241f;max-width:860px;margin:0 auto;padding:40px 20px}'+
+ 'h1,h2,h3{font-family:Georgia,serif}.card{background:#fffdf6;border:1px solid #e3dac4;border-radius:12px;padding:18px;margin:14px 0}'+
+ '.k{letter-spacing:.15em;font-size:12px;font-weight:700;color:#a8402c;text-transform:uppercase}a{color:#2f6f9a}</style>\n</head>\n<body>\n'+
+ '<p class="k">Tygodnik · numer roboczy</p>\n<h1>MIASTO. Tydzień DD–DD MMM RRRR</h1>\n'+
+ '<!-- SEKCJA:2 -->\n<div class="card"><h3>TEMAT TYGODNIA</h3><p>Lead do 7 zdań.</p><p>Źródło: <a href="URL">nazwa</a></p></div>\n<!-- /SEKCJA:2 -->\n'+
+ '<!-- SEKCJA:3 -->\n<div class="card"><p>pt … · sob … · niedz …</p></div>\n<!-- /SEKCJA:3 -->\n'+
+ '</body>\n</html>';
+document.getElementById('dl').addEventListener('click',function(){
+  var b=new Blob([TPL],{type:'text/html'});var a=document.createElement('a');
+  a.href=URL.createObjectURL(b);a.download='szablon-tygodnika.html';a.click();URL.revokeObjectURL(a.href);
+});
+renderIssues();renderCheck();
+</script>
+</body>
+</html>
