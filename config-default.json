@@ -1,0 +1,27 @@
+{
+  "wersja": 2.1,
+  "fallback_chain": ["lokalne", "miejskie", "regionalne", "ogolnopolskie", "online"],
+  "sekcje": [
+    {"id": 1, "nazwa": "Header & Reklama 1", "typ": "header", "widgety": ["pogoda", "powietrze"], "sponsor": null},
+    {"id": 2, "nazwa": "Ultra-Local Flash", "typ": "flash", "temat_glowny": 1, "newsy": 3, "kategorie": ["administracja", "infrastruktura", "bezpieczenstwo"]},
+    {"id": 3, "nazwa": "Lokalny Czas Wolny", "typ": "weekendownik", "dni": ["pt", "sob", "niedz"], "polecajka_biblioteki": true, "wypady_Warszawa": false, "kategorie": ["kultura"]},
+    {"id": 4, "nazwa": "Kultura z Kanapy", "typ": "kanapa", "rozszerza_przy_braku": true},
+    {"id": 5, "nazwa": "Twoja Kieszeń", "typ": "bazar", "moduly": ["praca", "nieruchomosci", "licytacje", "c2c", "radar_cen"], "ai_agent": true},
+    {"id": 6, "nazwa": "Życie Wspólnoty + Reklama 2", "typ": "wspolnota", "moduly": ["spotted", "parafie", "apteki"], "reklama": "tier2", "rotacja_brak": ["klub_czytelnika", "apel", "referral"]},
+    {"id": 7, "nazwa": "Edukacja, Kursy, Szkolenia", "typ": "edukacja", "zasieg_min": 15},
+    {"id": 8, "nazwa": "Lokalny Sport i Zdrowie", "typ": "sport", "fallback": "poradnik_ogolnopolski", "kategorie": ["kultura"]},
+    {"id": 9, "nazwa": "Reklama 3 — Rynek Usług", "typ": "uslugi", "kafle": 6, "wypelniacz": ["referral", "klub_czytelnika"]},
+    {"id": 10, "nazwa": "Dodatek Ogólnopolski", "typ": "magazyn", "moduly": ["digest3", "quiz", "linkowisko"]},
+    {"id": 11, "nazwa": "Tożsamość i Pamięć", "typ": "nostalgia", "kategorie": ["media_archiwum"]},
+    {"id": 12, "nazwa": "Apel o Treści", "typ": "apel", "pozycje_zastepcze": [6, 8]},
+    {"id": 13, "nazwa": "Podziel się z Sąsiadem", "typ": "referral", "nagrody": {"3": "darmowa kawa w lokalnej kawiarni"}},
+    {"id": 14, "nazwa": "Klub Czytelnika", "typ": "crowdfunding", "linki": {"patronite": null, "zrzutka": null, "buycoffee": null}, "priorytet_nad": ["apel"]},
+    {"id": 15, "nazwa": "Footer", "typ": "footer", "linki": ["wypis", "rodo", "preferencje"], "firma": "Centrum AI dla Biznesu Sp. z o.o."}
+  ],
+  "reklamy": {
+    "tier1": {"sponsor": null, "slogan": null, "zasada": "nigdy nie rotuje"},
+    "tier2": {"format": "ad_story", "aktywna": false},
+    "tier3": {"kafle": [], "sprzedane": 0},
+    "rotacja": {"kolejnosc": ["klub_czytelnika", "apel", "referral"], "zasada": "crowdfunding > apel > referral"}
+  }
+}
