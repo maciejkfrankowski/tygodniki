@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TYTUL}} · {{TYDZIEN}}</title>
+<style>
+  :root{--paper:#f6f1e5;--ink:#26241f;--muted:#6d675b;--red:#a8402c;--green:#3f6b4f;
+        --blue:#2f6f9a;--card:#fffdf6;--line:#e3dac4}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.65 "Segoe UI",system-ui,Arial,sans-serif}
+  .wrap{max-width:860px;margin:0 auto;padding:32px 20px 80px}
+  header{border-bottom:3px solid var(--ink);padding-bottom:18px;margin-bottom:26px}
+  .kicker{letter-spacing:.18em;font-size:12px;font-weight:700;color:var(--red);text-transform:uppercase;margin:0 0 10px}
+  h1{font-family:Georgia,serif;font-size:38px;line-height:1.15;margin:0 0 12px}
+  h2{font-family:Georgia,serif;font-size:28px;margin:0 0 8px}
+  h3{font-family:Georgia,serif;font-size:20px;margin:0 0 8px} h4{margin:0 0 6px;font-size:16px}
+  .toc{color:var(--muted);font-size:14px}
+  .widgets{display:flex;gap:14px;flex-wrap:wrap;font-size:14px;color:var(--muted);margin:6px 0}
+  .sect{letter-spacing:.14em;font-size:12px;font-weight:700;text-transform:uppercase;color:var(--muted);margin:40px 0 0}
+  section{margin-bottom:8px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}
+  .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--red);border-radius:4px;padding:3px 8px;margin-bottom:10px}
+  .tag.blue{background:var(--blue)}.tag.green{background:var(--green)}.tag.amber{background:#b07a1f}
+  .meta{color:var(--muted);font-size:14px;margin:8px 0 0}
+  a{color:var(--blue);text-decoration:underline;text-underline-offset:3px} a:hover{color:var(--red)}
+  figure{margin:22px 0} figure img{width:100%;border-radius:10px;border:1px solid var(--line);display:block}
+  figcaption{font-size:13.5px;color:var(--muted);font-style:italic;margin-top:8px}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);font-size:15px}
+  td{padding:10px 14px;border-top:1px solid var(--line);vertical-align:top}
+  td.d{white-space:nowrap;font-weight:700;color:var(--red);width:120px} tr:first-child td{border-top:0}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:14px 0}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px}
+  .box p{margin:0;font-size:14px;color:var(--muted)}
+  .ad{border:2px dashed var(--line);border-radius:12px;padding:14px 16px;margin:14px 0;background:#fbf7ec}
+  .ad.t1{border-color:var(--red)}
+  ul.src{list-style:none;padding:0;margin:10px 0} ul.src li{padding:7px 0;border-top:1px dashed var(--line);font-size:15px} ul.src li:first-child{border-top:0}
+  footer{margin-top:50px;border-top:3px solid var(--ink);padding-top:14px;font-size:13px;color:var(--muted)}
+  @media print{body{background:#fff}.card,.box,.ad{box-shadow:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+{{SEKCJE}}
+</div>
+</body>
+</html>
