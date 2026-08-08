@@ -1,12 +1,13 @@
-#!/usr/bin/env python3
-"""Tygodnik v2.2: config-default + configi miast (nadpisania) + tresc.html (markery SEKCJA:n).
+ #!/usr/bin/env python3
+"""Tygodnik v2.3: config-default + configi miast (nadpisania) + dziedziczenie "base"
+(np. dzielnice Warszawy dziedziczą miasta/warszawa-base.json) + tresc.html (markery SEKCJA:n).
 Równoległe RSS/API z cache (OK 6h / błąd 24h), filtr świeżości 14 dni, pamięć publikacji 90 dni."""
 import json, re, glob, time, urllib.request, xml.etree.ElementTree as ET
 from datetime import date, timedelta
 from concurrent.futures import ThreadPoolExecutor
 from email.utils import parsedate_to_datetime
 
-UA = {'User-Agent': 'tygodnik-bot/2.2'}
+UA = {'User-Agent': 'tygodnik-bot/2.3'}
 CACHE_F = '.cache_feeds.json'
 HIST_F = 'historia.json'
 TTL_OK, TTL_FAIL = 6 * 3600, 24 * 3600
@@ -68,7 +69,22 @@ def weekend():
     d = date.today(); s = d + timedelta((5 - d.weekday()) % 7); return s, s + timedelta(1)
 SAT, SUN = weekend(); TYDZIEN = date.today().isocalendar()[1]; IMGW = get_imgw()
 
+# ---------- configi: default + base + miasto ----------
 DEFAULT = json.load(open('config-default.json', encoding='utf-8'))
+
+def load_city(cp):
+    """Wczytuje config miasta; jeśli ma klucz "base", dokleja źródła z miasta/<base>-base.json."""
+    city = json.load(open(cp, encoding='utf-8'))
+    base_name = city.pop('base', None)
+    if base_name:
+        base = json.load(open('miasta/%s-base.json' % base_name, encoding='utf-8'))
+        z = {}
+        for kat, items in base.get('zrodla', {}).items(): z[kat] = list(items)
+        for kat, items in city.get('zrodla', {}).items():
+            z.setdefault(kat, []); z[kat] += items
+        city['zrodla'] = z
+    return city
+
 def merge_cfg(city):
     cfg = json.loads(json.dumps(DEFAULT))
     for k, v in city.items():
@@ -196,7 +212,7 @@ RENDER = {1: sec_header, 2: sec_flash, 3: sec_weekend, 4: sec_kanapa, 5: sec_baz
 
 # ---------- miasta + równoległe pobieranie ----------
 city_files = sorted(glob.glob('miasta/*/config.json'))
-cities = [merge_cfg(json.load(open(cp, encoding='utf-8'))) for cp in city_files]
+cities = [merge_cfg(load_city(cp)) for cp in city_files]
 
 urls, apis = set(), set()
 for cfg in cities:
