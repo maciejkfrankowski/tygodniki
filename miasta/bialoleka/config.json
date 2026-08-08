@@ -1,0 +1,22 @@
+{
+  "base": "warszawa",
+  "miasto": "Białołęka",
+  "tytul": "Tygodnik Białołęcki",
+  "plik": "bialoleka.html",
+  "sekcje_override": {},
+  "zrodla": {
+    "administracja": [
+      {"nazwa": "Urząd Dzielnicy Białołęka", "url": "https://bialoleka.um.warszawa.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "BIP Warszawa (dzielnica)", "url": "https://bip.warszawa.pl/", "status": "ok", "typ": "strona"}
+    ],
+    "kultura": [
+      {"nazwa": "Białołęcki Ośrodek Kultury", "url": "https://bok.waw.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Kino Głębocka 66 (BOK)", "url": "https://bok.waw.pl/", "status": "ok", "typ": "strona", "notatka": "repertuar „Kino na boku”"},
+      {"nazwa": "Białołęcki Ośrodek Sportu", "url": "https://sport.um.warszawa.pl/waw/bos", "status": "ok", "typ": "strona"}
+    ],
+    "media_archiwum": [
+      {"nazwa": "iBiałołęka", "url": "https://ibialoleka.pl/", "status": "warn", "typ": "rss", "notatka": "sprawdzić /feed"},
+      {"nazwa": "Gazeta Białołęki", "url": "https://www.gazetabialoleki.pl/", "status": "warn", "typ": "rss", "notatka": "sprawdzić /feed"}
+    ]
+  }
+}
