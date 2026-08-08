@@ -1,0 +1,73 @@
+{
+  "zrodla": {
+    "administracja": [
+      {"nazwa": "Urząd m.st. Warszawy", "url": "https://um.warszawa.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "BIP Warszawa", "url": "https://bip.warszawa.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Rada m.st. Warszawy", "url": "https://bip.warszawa.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Urząd Wojewódzki (Mazowieckie)", "url": "https://www.gov.pl/web/uw-warminsko-mazurski", "status": "warn", "typ": "strona", "notatka": "dla Warszawy: gov.pl/web/mazowiecki-uw"},
+      {"nazwa": "Marszałek (mazovia)", "url": "https://mazovia.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "GUS BDL", "url": "https://bdl.stat.gov.pl/", "status": "ok", "typ": "api"},
+      {"nazwa": "Rejestr wyborczy / PKW", "url": "https://pkw.gov.pl/", "status": "ok", "typ": "strona"}
+    ],
+    "infrastruktura": [
+      {"nazwa": "ZTM Warszawa (rozkłady)", "url": "https://ztm.waw.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "SKM Warszawa", "url": "https://skm.warszawa.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Koleje Mazowieckie", "url": "https://mazowieckie.com.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "PKP/IC (portal pasażera)", "url": "https://portalpasazera.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "WKD", "url": "https://wkd.com.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "MPWiK (woda)", "url": "https://www.mpwik.com.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Stoen Operator (prąd)", "url": "https://www.stoen.pl/", "status": "warn", "typ": "strona"},
+      {"nazwa": "MPO (odpady)", "url": "https://mpo.waw.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Spółdzielnie mieszkaniowe", "url": null, "status": "todo", "typ": "strona", "notatka": "per dzielnica"}
+    ],
+    "bezpieczenstwo": [
+      {"nazwa": "Komenda Stołeczna Policji", "url": "https://www.policja.waw.pl/", "status": "warn", "typ": "strona"},
+      {"nazwa": "Straż Miejska m.st. Warszawy", "url": "https://strazmiejska.waw.pl/", "status": "warn", "typ": "strona"},
+      {"nazwa": "PSSE Warszawa", "url": "https://www.gov.pl/web/psse-warszawa", "status": "warn", "typ": "strona"},
+      {"nazwa": "NFZ Warszawa", "url": "https://www.nfz-warszawa.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Szpitale (dyżury)", "url": null, "status": "todo", "typ": "strona"},
+      {"nazwa": "Powiatowy Lekarz Weterynarii", "url": null, "status": "todo", "typ": "strona"}
+    ],
+    "srodowisko": [
+      {"nazwa": "RDOŚ Warszawa", "url": "https://www.gov.pl/web/rdos-warszawa", "status": "ok", "typ": "strona"},
+      {"nazwa": "WIOŚ Warszawa", "url": "https://www.gov.pl/web/wios-warszawa", "status": "ok", "typ": "strona"},
+      {"nazwa": "Wody Polskie (RZGW Warszawa)", "url": "https://www.gov.pl/web/wody-polskie", "status": "warn", "typ": "strona"},
+      {"nazwa": "Lasy Miejskie Warszawa", "url": null, "status": "warn", "typ": "strona", "notatka": "lasy-miejskie.waw.pl?"},
+      {"nazwa": "IMGW", "url": "https://meteo.imgw.pl/", "status": "ok", "typ": "api"},
+      {"nazwa": "Jakość powietrza (GIOŚ)", "url": "https://powietrze.gios.gov.pl/", "status": "ok", "typ": "api"}
+    ],
+    "nieruchomosci": [
+      {"nazwa": "Licytacje komornicze", "url": "https://licytacje.komornik.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "RCiWN (Ratusz)", "url": "https://um.warszawa.pl/", "status": "warn", "typ": "strona"},
+      {"nazwa": "WUOZ Warszawa (zabytki)", "url": "https://www.gov.pl/web/wuoz-warszawa", "status": "warn", "typ": "strona"},
+      {"nazwa": "Mapa inwestycji (GIS)", "url": "https://mapa.um.warszawa.pl/", "status": "warn", "typ": "strona"}
+    ],
+    "edukacja": [
+      {"nazwa": "Edukacja Warszawa (żłobki/szkoły)", "url": "https://edukacja.warszawa.pl/", "status": "warn", "typ": "strona"},
+      {"nazwa": "Uniwersytet Warszawski", "url": "https://www.uw.edu.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Politechnika Warszawska", "url": "https://www.pw.edu.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "UTW (miejskie)", "url": null, "status": "todo", "typ": "strona"}
+    ],
+    "kultura": [
+      {"nazwa": "Muzeum Narodowe", "url": "https://mnw.art.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Biblioteka Narodowa / Polona", "url": "https://polona.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Kina (repertuary Warszawa)", "url": "https://www.filmweb.pl/showtimes/Warszawa", "status": "ok", "typ": "strona"},
+      {"nazwa": "Legia Warszawa", "url": "https://legia.com/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Filharmonia Narodowa", "url": "https://filharmonia.pl/", "status": "warn", "typ": "strona"},
+      {"nazwa": "Teatry (e-wejściówki)", "url": "https://teatr.warszawa.pl/", "status": "warn", "typ": "strona", "notatka": "zweryfikować domenę"}
+    ],
+    "handel_spolecznosc": [
+      {"nazwa": "Archidiecezja Warszawska", "url": "https://archwwa.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Diecezja Warszawsko‑Praska", "url": "https://diecezjawarszawskopraska.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "Miejski Rzecznik Konsumentów", "url": "https://um.warszawa.pl/", "status": "warn", "typ": "strona"},
+      {"nazwa": "Grupy FB / Spotted", "url": null, "status": "todo", "typ": "fb", "notatka": "per dzielnica"}
+    ],
+    "media_archiwum": [
+      {"nazwa": "TVN Warszawa", "url": "https://tvnwarszawa.pl/", "status": "ok", "typ": "rss"},
+      {"nazwa": "Wyborcza Warszawa", "url": "https://warszawa.wyborcza.pl/", "status": "ok", "typ": "rss"},
+      {"nazwa": "WawaLove", "url": "https://wawalove.pl/", "status": "warn", "typ": "rss"},
+      {"nazwa": "Nekrologi (Wyborcza)", "url": "https://nekrologi.wyborcza.pl/", "status": "ok", "typ": "strona"},
+      {"nazwa": "e‑BUW / archiwa cyfrowe", "url": "https://ebuwuwa.pl/", "status": "warn", "typ": "strona"}
+    ]
+  }
+}
