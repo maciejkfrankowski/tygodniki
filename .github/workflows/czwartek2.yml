@@ -1,4 +1,4 @@
-name: czwartkowy-build
+ name: czwartkowy-build
 on:
   schedule:
     - cron: "0 5 * * 4"      # czwartek 05:00 UTC = 07:00 PL
@@ -8,9 +8,13 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      AI_API_KEY: ${{ secrets.AI_API_KEY }}
+      AI_BASE_URL: ${{ secrets.AI_BASE_URL }}
+      AI_MODEL: ${{ secrets.AI_MODEL }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with: { python-version: "3.12" }
       - run: python build_newsletter.py
       - run: |
