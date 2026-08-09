@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-"""AI‑redaktor (ścieżka A): czyta nagłówki RSS miasta i generuje szkic tresc_ai.html (SEKCJA:2).
+"""AI‑redaktor (ścieżka A): czyta nagłówki RSS/HTML miasta i generuje szkic tresc_ai.html.
 Człowiek ma pierwszeństwo: bloki z tresc.html nadpisują AI w buildzie.
-Wymaga sekretu AI_API_KEY (endpoint OpenAI‑compatible, domyślnie DashScope/Qwen)."""
+Wymaga sekretu AI_API_KEY (OpenRouter/Qwen)."""
 import json, glob, os, urllib.request, xml.etree.ElementTree as ET
 from datetime import date
+import re
 
-BASE_URL = os.environ.get('AI_BASE_URL', 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1')
-MODEL = os.environ.get('AI_MODEL', 'qwen-plus')
+BASE_URL = os.environ.get('AI_BASE_URL', 'https://openrouter.ai/api/v1')
+MODEL = os.environ.get('AI_MODEL', 'qwen/qwen-plus')
 UA = {'User-Agent': 'tygodnik-ai/1.0'}
 
 def fetch(u):
@@ -14,13 +15,38 @@ def fetch(u):
         return r.read()
 
 def rss_items(url, n=6):
+    """Próbuje parsować RSS/XML; jeśli failuje, wyciąga nagłówki z HTML."""
     try:
-        root = ET.fromstring(fetch(url)); out = []
+        content = fetch(url)
+        # Próba parsowania jako XML/RSS
+        root = ET.fromstring(content)
+        out = []
         for it in (root.findall('.//item') or root.findall('.//{http://www.w3.org/2005/Atom}entry'))[:n]:
             t = (it.findtext('title') or '').strip(); l = (it.findtext('link') or '').strip()
             if t and l: out.append((t, l))
+        if out: return out
+    except Exception as e:
+        print(f'  RSS/XML fail dla {url}: {e}')
+    
+    # Fallback: scraping HTML (szuka tytułów artykułów)
+    try:
+        content = fetch(url).decode('utf-8', errors='ignore')
+        # Szuka <h2>, <h3> lub <a> z tytułami artykułów
+        titles = re.findall(r'<(?:h[23]|a)[^>]*>([^<]{10,80})</(?:h[23]|a)>', content, re.I)
+        # Filtrowanie: usuwa duplikaty, menu, nawigację
+        out = []
+        seen = set()
+        for t in titles:
+            t = t.strip()
+            if t and len(t) > 15 and t not in seen and not any(x in t.lower() for x in ['menu', 'zaloguj', 'rejestracja', 'kontakt', 'o nas']):
+                seen.add(t)
+                out.append((t, url))
+                if len(out) >= n: break
+        print(f'  HTML scraping: znaleziono {len(out)} nagłówków')
         return out
-    except Exception: return []
+    except Exception as e:
+        print(f'  HTML scraping fail dla {url}: {e}')
+        return []
 
 def ai_complete(prompt, system):
     key = os.environ.get('AI_API_KEY')
@@ -36,6 +62,7 @@ def ai_complete(prompt, system):
         print('AI błąd:', e); return None
 
 def load_city(cp):
+    """Wczytuje config miasta; jeśli ma klucz "base", dokleja źródła z miasta/<base>-base.json."""
     city = json.load(open(cp, encoding='utf-8'))
     base_name = city.pop('base', None)
     if base_name:
@@ -52,11 +79,20 @@ SYSTEM = ('Jesteś redaktorem lokalnego tygodnika w Polsce. Piszesz rzeczowe, ap
           'z podanych nagłówków i linków.')
 
 def draft_for(cfg):
+    print(f'Pobieranie nagłówków dla: {cfg["miasto"]}')
     nagl = []
     for z in sum(cfg['zrodla'].values(), []):
         if z.get('typ') == 'rss' and z.get('url'):
-            for t, l in rss_items(z['url']): nagl.append((z['nazwa'], t, l))
-    if not nagl: return None
+            items = rss_items(z['url'])
+            for t, l in items:
+                nagl.append((z['nazwa'], t, l))
+            if items:
+                print(f'  {z["nazwa"]}: {len(items)} nagłówków')
+    
+    if not nagl:
+        print(f'  Brak nagłówków dla {cfg["miasto"]}')
+        return None
+    
     lista = '\n'.join('- [%s] %s — %s' % (n, t, l) for n, t, l in nagl[:12])
     prompt = ('Miasto: %s. Data: %s.\nNagłówki z lokalnych źródeł:\n%s\n\n'
               'Zwróć WYŁĄCZNIE poniższy fragment HTML:\n'
@@ -66,7 +102,10 @@ def draft_for(cfg):
               '+ dokładnie 2 kolejne karty newsów (span class="tag blue" oraz "green")\n'
               '<!-- /SEKCJA:2 -->' % (cfg['miasto'], date.today(), lista))
     out = ai_complete(prompt, SYSTEM)
-    if out and '<!-- SEKCJA:2 -->' in out and '<!-- /SEKCJA:2 -->' in out: return out
+    if out and '<!-- SEKCJA:2 -->' in out and '<!-- /SEKCJA:2 -->' in out:
+        print(f'  ✔ Szkic AI wygenerowany dla {cfg["miasto"]}')
+        return out
+    print(f'  ✗ AI nie zwrócił poprawnego HTML dla {cfg["miasto"]}')
     return None
 
 def main():
@@ -78,8 +117,8 @@ def main():
         out = draft_for(cfg)
         if out:
             open(folder + '/tresc_ai.html', 'w', encoding='utf-8').write(out)
-            print('✔ szkic AI:', cfg['plik'])
+            print('✔ zapisano:', folder + '/tresc_ai.html')
         else:
-            print('– brak danych/szkicu:', cfg['plik'])
+            print('– brak szkicu dla:', cfg['plik'])
 
 if __name__ == '__main__': main()
