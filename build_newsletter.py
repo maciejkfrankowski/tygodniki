@@ -1,13 +1,16 @@
  #!/usr/bin/env python3
-"""Tygodnik v2.3: config-default + configi miast (nadpisania) + dziedziczenie "base"
-(np. dzielnice Warszawy dziedziczą miasta/warszawa-base.json) + tresc.html (markery SEKCJA:n).
-Równoległe RSS/API z cache (OK 6h / błąd 24h), filtr świeżości 14 dni, pamięć publikacji 90 dni."""
-import json, re, glob, time, urllib.request, xml.etree.ElementTree as ET
+"""Tygodnik v2.4: config-default + configi miast (nadpisania) + dziedziczenie "base"
++ tresc.html (człowiek) > tresc_ai.html (AI) > auto‑dane/fallbacki.
+Równoległe RSS/API z cache (OK 6h / błąd 24h), filtr świeżości 14 dni, pamięć publikacji 90 dni.
+Opcjonalne AI (OpenAI‑compatible, domyślnie DashScope/Qwen; wymaga sekretu AI_API_KEY):
+ - ścieżka B: sekcja 10 „Dodatek ogólnopolski" generowana z ogólnopolskich RSS (gen_magazyn),
+ - ścieżka A: szkice leadów tworzy ai_redaktor.py (workflow środowy) do tresc_ai.html."""
+import json, re, glob, time, os, urllib.request, xml.etree.ElementTree as ET
 from datetime import date, timedelta
 from concurrent.futures import ThreadPoolExecutor
 from email.utils import parsedate_to_datetime
 
-UA = {'User-Agent': 'tygodnik-bot/2.3'}
+UA = {'User-Agent': 'tygodnik-bot/2.4'}
 CACHE_F = '.cache_feeds.json'
 HIST_F = 'historia.json'
 TTL_OK, TTL_FAIL = 6 * 3600, 24 * 3600
@@ -21,6 +24,7 @@ HIST = {}
 try: HIST = json.load(open(HIST_F, encoding='utf-8'))
 except Exception: pass
 
+# ---------- pobieranie ----------
 def fetch_raw(u):
     with urllib.request.urlopen(urllib.request.Request(u, headers=UA), timeout=15) as r:
         return r.read()
@@ -68,6 +72,39 @@ def get_imgw():
 def weekend():
     d = date.today(); s = d + timedelta((5 - d.weekday()) % 7); return s, s + timedelta(1)
 SAT, SUN = weekend(); TYDZIEN = date.today().isocalendar()[1]; IMGW = get_imgw()
+
+# ---------- AI (ścieżka B) ----------
+AI_BASE_URL = os.environ.get('AI_BASE_URL', 'https://dashscope-intl.aliyuncs.com/compatible-mode/v1')
+AI_MODEL = os.environ.get('AI_MODEL', 'qwen-plus')
+
+def ai_complete(prompt, system):
+    key = os.environ.get('AI_API_KEY')
+    if not key: return None
+    body = json.dumps({'model': AI_MODEL, 'temperature': 0.7,
+        'messages': [{'role': 'system', 'content': system}, {'role': 'user', 'content': prompt}]}).encode()
+    req = urllib.request.Request(AI_BASE_URL + '/chat/completions', data=body,
+        headers={'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json'})
+    try:
+        with urllib.request.urlopen(req, timeout=90) as r: d = json.load(r)
+        return d['choices'][0]['message']['content']
+    except Exception:
+        return None
+
+MAG_RSS = ['https://www.tvn24.pl/najnowsze.xml', 'https://wiadomosci.wp.pl/rss.xml']
+def gen_magazyn():
+    nagl = []
+    for u in MAG_RSS:
+        try:
+            root = ET.fromstring(fetch_raw(u))
+            for it in root.findall('.//item')[:5]:
+                t = (it.findtext('title') or '').strip()
+                if t: nagl.append(t)
+        except Exception: pass
+    if not nagl or not os.environ.get('AI_API_KEY'): return None
+    return ai_complete('Nagłówki ogólnopolskie:\n' + '\n'.join('- ' + t for t in nagl[:12]) +
+        '\n\nWybierz 3 APOLITYCZNE ciekawostki z możliwym wpływem na życie lokalne (ceny, pogoda, zdrowie, transport). '
+        'Zwróć wyłącznie HTML: trzy akapity <p>🌍 <b>1) …</b> 1–2 zdania.</p> oraz <p>🧩 <b>Quiz:</b> pytanie (odpowiedź).</p>',
+        'Jesteś apolitycznym redaktorem magazynu lokalnego. Zero polityki.')
 
 # ---------- configi: default + base + miasto ----------
 DEFAULT = json.load(open('config-default.json', encoding='utf-8'))
@@ -142,8 +179,12 @@ def sec_header(s, cfg, blk, auto):
 def sec_flash(s, cfg, blk, auto):
     out = '<p class="sect">Puls tygodnia</p><h2>Ultra‑Local Flash</h2>'
     out += blk or '<div class="card"><h3>Temat tygodnia</h3><p>Uzupełnij w tresc.html (SEKCJA:2).</p></div>'
-    li = ''.join('<li><a href="%s" target="_blank">%s</a> <span class="meta">· %s</span></li>' % (l, t, n) for n, l, t in auto['rss'][:4])
-    return out + '<div class="card"><h3>W mijającym tygodniu</h3><ul class="src">%s</ul></div>' % li
+    if auto['rss']:
+        li = ''.join('<li><a href="%s" target="_blank">%s</a> <span class="meta">· %s</span></li>' % (l, t, n) for n, l, t in auto['rss'][:4])
+        out += '<div class="card"><h3>W mijającym tygodniu</h3><ul class="src">%s</ul></div>' % li
+    else:
+        out += '<div class="card"><h3>W mijającym tygodniu</h3><p class="meta">Lista automatyczna się kalibruje — weryfikujemy kanały RSS dzielnicy. Masz cynk? Zobacz „Apel o treści" niżej.</p></div>'
+    return out
 
 def sec_weekend(s, cfg, blk, auto):
     out = '<p class="sect">Weekendownik</p><h2>Lokalny czas wolny</h2>' + (blk or '')
@@ -157,7 +198,7 @@ def sec_weekend(s, cfg, blk, auto):
     return out
 
 def sec_kanapa(s, cfg, blk, auto):
-    return '<p class="sect">Płynność · lifestyle</p><h2>Kultura z kanapy (ogólnopolska)</h2>' + (blk or '<div class="card"><p>🎬 streaming · 📚 książka/audiobook · 🎧 podcast · 🎼 muzyka — wybór redakcji/AI. Sekcja rozszerza się, gdy lokalnych treści jest mało.</p></div>')
+    return '<p class="sect">Płynność · lifestyle</p><h2>Kultura z kanapy (ogólnopolska)</h2>' + (blk or '<div class="card"><p>🎬 streaming ·  książka/audiobook · 🎧 podcast · 🎼 muzyka — wybór redakcji/AI. Sekcja rozszerza się, gdy lokalnych treści jest mało.</p></div>')
 
 def sec_bazar(s, cfg, blk, auto):
     mod = {'praca': '💼 Praca (PUP/oferty)', 'nieruchomosci': '🏠 Nieruchomości — ceny',
@@ -192,7 +233,9 @@ def sec_uslugi(s, cfg, blk, auto):
     return '<p class="sect">Lokalny rynek usług</p><h2>Reklama 3 — rynek usług</h2><div class="grid">%s</div>' % tiles
 
 def sec_magazyn(s, cfg, blk, auto):
-    return '<p class="sect">Centralny magazyn</p><h2>Dodatek ogólnopolski</h2>' + (blk or '<div class="card"><p>🌍 3 apolityczne ciekawostki z wpływem na lokalność · 🧩 quiz + Lokalny Paszport · 🔗 linkowisko.</p></div>')
+    dom = ('<div class="card">%s</div>' % auto.get('magazyn')) if auto.get('magazyn') else \
+          '<div class="card"><p>🌍 3 apolityczne ciekawostki z wpływem na lokalność · 🧩 quiz + Lokalny Paszport · 🔗 linkowisko.</p></div>'
+    return '<p class="sect">Centralny magazyn</p><h2>Dodatek ogólnopolski</h2>' + (blk or dom)
 
 def sec_nostalgia(s, cfg, blk, auto):
     out = '<p class="sect">Tożsamość i pamięć</p><h2>Tożsamość i pamięć</h2>'
@@ -225,6 +268,8 @@ with ThreadPoolExecutor(max_workers=10) as ex:
     EV = dict(zip(sorted(apis), ex.map(lambda a: get_events(a, SAT, SUN), sorted(apis))))
 json.dump(CACHE_D, open(CACHE_F, 'w', encoding='utf-8'), ensure_ascii=False)
 
+MAGAZYN = gen_magazyn()   # ścieżka B: None bez klucza AI lub bez RSS‑ów
+
 def build_auto(cfg):
     rss = []
     for z in sources_all(cfg):
@@ -236,13 +281,14 @@ def build_auto(cfg):
     ev = []
     for z in sources_all(cfg):
         if z.get('api'): ev += EV.get(z['api'], [])
-    return {'rss': rss, 'events': ev}
+    return {'rss': rss, 'events': ev, 'magazyn': MAGAZYN}
 
 SZABLON = open('szablon.html', encoding='utf-8').read()
 miasta = []
 for cp, cfg in zip(city_files, cities):
     folder = cp[:-len('/config.json')]
-    blocks = extract_blocks(folder + '/tresc.html')
+    blocks = extract_blocks(folder + '/tresc_ai.html')          # szkic AI (ścieżka A)
+    blocks.update(extract_blocks(folder + '/tresc.html'))       # człowiek nadpisuje AI
     auto = build_auto(cfg)
     parts = []
     for s in cfg['sekcje']:
