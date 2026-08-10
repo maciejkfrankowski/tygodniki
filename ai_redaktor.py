@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
-"""AI‑redaktor: lepszy scraping HTML (filtruje śmieci nawigacyjne, priorytet dla lokalnych źródeł)."""
+ #!/usr/bin/env python3
+"""AI‑redaktor: bierzemy zbalansowaną próbkę z każdego źródła (3 nagłówki/źródło)."""
 import json, glob, os, urllib.request, xml.etree.ElementTree as ET
 from datetime import date
 import re
@@ -14,15 +14,18 @@ BLACKLIST = [
     'ustawienia', 'stopka', 'nawigacja', 'treści głównej', 'prenumerata', 'pakiet',
     'firmy i instytucje', 'czytelnicy indywidualni', 'moje zakupy', 'zrealizuj voucher',
     'preferencje treści', 'program —', 'wiadomości z', 'news from', 'gorzów wielkopolski',
-    'lidzbark warmiński', 'nowe miasto lubawskie', 'z życia', 'kongres przyszłości'
+    'lidzbark warmiński', 'nowe miasto lubawskie', 'z życia', 'kongres przyszłości',
+    'wybierz prenumeratę', 'dzisiejsza gazeta', 'kobieta - serwis', 'reportaże multimedialne',
+    'tylko na', 'tematy dnia', 'regionalny system ostrzegania', 'pszoek', 'praca grodzisk',
+    'pogoda, ostrzeżenia', 'jakość powietrza', 'apteki w', 'informacje z warmii'
 ]
 
 def fetch(u):
     with urllib.request.urlopen(urllib.request.Request(u, headers=UA), timeout=15) as r:
         return r.read()
 
-def rss_items(url, n=6):
-    """Próbuje parsować RSS/XML; jeśli failuje, wyciąga nagłówki z HTML."""
+def rss_items(url, n=3):
+    """Próbuje parsować RSS/XML; jeśli failuje, wyciąga nagłówki z HTML. BIERZE MAX 3."""
     try:
         content = fetch(url)
         root = ET.fromstring(content)
@@ -37,19 +40,20 @@ def rss_items(url, n=6):
     # Fallback: scraping HTML z filtrami
     try:
         content = fetch(url).decode('utf-8', errors='ignore')
-        # Szuka tytułów w h2, h3, a (ale z filtrami)
         titles = re.findall(r'<(?:h[23]|a)[^>]*>([^<]{15,120})</(?:h[23]|a)>', content, re.I)
         out = []
         seen = set()
         for t in titles:
             t = t.strip()
-            # Filtr 1: długość (min 20 znaków, max 120)
-            if len(t) < 20 or len(t) > 120: continue
-            # Filtr 2: blacklist (małe litery)
+            # Filtr 1: długość (min 20 znaków - wyklucza nazwiska, tagi)
+            if len(t) < 25 or len(t) > 120: continue
+            # Filtr 2: blacklist
             t_lower = t.lower()
             if any(bl in t_lower for bl in BLACKLIST): continue
             # Filtr 3: brak duplikatów
             if t in seen: continue
+            # Filtr 4: wyklucz prawdopodobne nazwiska autorów (brak czasowników, krótkie)
+            if len(t.split()) < 4: continue
             seen.add(t)
             out.append((t, url))
             if len(out) >= n: break
@@ -87,14 +91,14 @@ def load_city(cp):
 SYSTEM = ('Jesteś redaktorem lokalnego tygodnika w Polsce. Piszesz KONKRETNE, sąsiedzkie leady do 7 zdań. '
           'Styl: rzeczowy, apolityczny, "co się dzieje na ulicy obok". Zawsze podajesz klikalne źródło. '
           'Nie wymyślaj faktów — korzystaj wyłącznie z podanych nagłówków i linków. '
-          'Priorytet: newsy lokalne (dzielnica/miasto), nie ogólnopolskie. Pisz o sprawach ważnych dla mieszkańców')
+          'Priorytet: newsy lokalne (dzielnica/miasto), nie ogólnopolskie.')
 
 def draft_for(cfg):
     print(f'Pobieranie nagłówków dla: {cfg["miasto"]}')
     nagl = []
     for z in sum(cfg['zrodla'].values(), []):
         if z.get('typ') == 'rss' and z.get('url'):
-            items = rss_items(z['url'])
+            items = rss_items(z['url'], n=3)  # BIERZE MAX 3 z każdego źródła
             for t, l in items:
                 nagl.append((z['nazwa'], t, l))
             if items:
@@ -104,7 +108,7 @@ def draft_for(cfg):
         print(f'  Brak nagłówków dla {cfg["miasto"]}')
         return None
     
-    lista = '\n'.join('- [%s] %s — %s' % (n, t, l) for n, t, l in nagl[:12])
+    lista = '\n'.join('- [%s] %s — %s' % (n, t, l) for n, t, l in nagl[:15])
     print('=== NAGŁÓWKI DLA AI ===')
     print(lista)
     print('=== KONIEC NAGŁÓWKÓW ===')
