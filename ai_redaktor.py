@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""AI‑redaktor (ścieżka A): czyta nagłówki RSS/HTML miasta i generuje szkic tresc_ai.html.
-Człowiek ma pierwszeństwo: bloki z tresc.html nadpisują AI w buildzie.
-Wymaga sekretu AI_API_KEY (OpenRouter/Qwen)."""
+"""AI‑redaktor: lepszy scraping HTML (filtruje śmieci nawigacyjne, priorytet dla lokalnych źródeł)."""
 import json, glob, os, urllib.request, xml.etree.ElementTree as ET
 from datetime import date
 import re
@@ -9,6 +7,15 @@ import re
 BASE_URL = os.environ.get('AI_BASE_URL', 'https://openrouter.ai/api/v1')
 MODEL = os.environ.get('AI_MODEL', 'qwen/qwen-plus')
 UA = {'User-Agent': 'tygodnik-ai/1.0'}
+
+# Słowa kluczowe do wykluczenia (nawigacja, menu, byliny)
+BLACKLIST = [
+    'przejdź do', 'menu', 'zaloguj', 'rejestracja', 'kontakt', 'o nas', 'cookies',
+    'ustawienia', 'stopka', 'nawigacja', 'treści głównej', 'prenumerata', 'pakiet',
+    'firmy i instytucje', 'czytelnicy indywidualni', 'moje zakupy', 'zrealizuj voucher',
+    'preferencje treści', 'program —', 'wiadomości z', 'news from', 'gorzów wielkopolski',
+    'lidzbark warmiński', 'nowe miasto lubawskie', 'z życia', 'kongres przyszłości'
+]
 
 def fetch(u):
     with urllib.request.urlopen(urllib.request.Request(u, headers=UA), timeout=15) as r:
@@ -18,7 +25,6 @@ def rss_items(url, n=6):
     """Próbuje parsować RSS/XML; jeśli failuje, wyciąga nagłówki z HTML."""
     try:
         content = fetch(url)
-        # Próba parsowania jako XML/RSS
         root = ET.fromstring(content)
         out = []
         for it in (root.findall('.//item') or root.findall('.//{http://www.w3.org/2005/Atom}entry'))[:n]:
@@ -28,21 +34,26 @@ def rss_items(url, n=6):
     except Exception as e:
         print(f'  RSS/XML fail dla {url}: {e}')
     
-    # Fallback: scraping HTML (szuka tytułów artykułów)
+    # Fallback: scraping HTML z filtrami
     try:
         content = fetch(url).decode('utf-8', errors='ignore')
-        # Szuka <h2>, <h3> lub <a> z tytułami artykułów
-        titles = re.findall(r'<(?:h[23]|a)[^>]*>([^<]{10,80})</(?:h[23]|a)>', content, re.I)
-        # Filtrowanie: usuwa duplikaty, menu, nawigację
+        # Szuka tytułów w h2, h3, a (ale z filtrami)
+        titles = re.findall(r'<(?:h[23]|a)[^>]*>([^<]{15,120})</(?:h[23]|a)>', content, re.I)
         out = []
         seen = set()
         for t in titles:
             t = t.strip()
-            if t and len(t) > 15 and t not in seen and not any(x in t.lower() for x in ['menu', 'zaloguj', 'rejestracja', 'kontakt', 'o nas']):
-                seen.add(t)
-                out.append((t, url))
-                if len(out) >= n: break
-        print(f'  HTML scraping: znaleziono {len(out)} nagłówków')
+            # Filtr 1: długość (min 20 znaków, max 120)
+            if len(t) < 20 or len(t) > 120: continue
+            # Filtr 2: blacklist (małe litery)
+            t_lower = t.lower()
+            if any(bl in t_lower for bl in BLACKLIST): continue
+            # Filtr 3: brak duplikatów
+            if t in seen: continue
+            seen.add(t)
+            out.append((t, url))
+            if len(out) >= n: break
+        print(f'  HTML scraping: znaleziono {len(out)} sensownych nagłówków')
         return out
     except Exception as e:
         print(f'  HTML scraping fail dla {url}: {e}')
@@ -62,7 +73,6 @@ def ai_complete(prompt, system):
         print('AI błąd:', e); return None
 
 def load_city(cp):
-    """Wczytuje config miasta; jeśli ma klucz "base", dokleja źródła z miasta/<base>-base.json."""
     city = json.load(open(cp, encoding='utf-8'))
     base_name = city.pop('base', None)
     if base_name:
@@ -74,9 +84,10 @@ def load_city(cp):
         city['zrodla'] = z
     return city
 
-SYSTEM = ('Jesteś redaktorem lokalnego tygodnika w Polsce. Piszesz rzeczowe, apolityczne, sąsiedzkie '
-          'leady do 7 zdań. Zawsze podajesz klikalne źródło. Nie wymyślaj faktów — korzystaj wyłącznie '
-          'z podanych nagłówków i linków.')
+SYSTEM = ('Jesteś redaktorem lokalnego tygodnika w Polsce. Piszesz KONKRETNE, sąsiedzkie leady do 7 zdań. '
+          'Styl: rzeczowy, apolityczny, "co się dzieje na ulicy obok". Zawsze podajesz klikalne źródło. '
+          'Nie wymyślaj faktów — korzystaj wyłącznie z podanych nagłówków i linków. '
+          'Priorytet: newsy lokalne (dzielnica/miasto), nie ogólnopolskie. Pisz o sprawach ważnych dla mieszkańców')
 
 def draft_for(cfg):
     print(f'Pobieranie nagłówków dla: {cfg["miasto"]}')
@@ -97,12 +108,16 @@ def draft_for(cfg):
     print('=== NAGŁÓWKI DLA AI ===')
     print(lista)
     print('=== KONIEC NAGŁÓWKÓW ===')
+    
     prompt = ('Miasto: %s. Data: %s.\nNagłówki z lokalnych źródeł:\n%s\n\n'
               'Zwróć WYŁĄCZNIE poniższy fragment HTML:\n'
               '<!-- SEKCJA:2 -->\n'
               '<div class="card"><span class="tag">Temat tygodnia</span><h3>TYTUŁ</h3>'
-              '<p>LEAD do 7 zdań</p><p class="meta">Źródło: <a href="LINK" target="_blank">NAZWA</a></p></div>\n'
+              '<p>LEAD do 7 zdań (styl sąsiedzki, konkretny: co się dzieje, gdzie, kiedy, kto)</p>'
+              '<p class="meta">Źródło: <a href="LINK" target="_blank">NAZWA</a></p></div>\n'
               '+ dokładnie 2 kolejne karty newsów (span class="tag blue" oraz "green")\n'
+              'Priorytet: newsy lokalne (dzielnica/miasto), nie ogólnopolskie. '
+              'Unikaj newsów typu "preferencje treści", "vouchery", "prenumerata".\n'
               '<!-- /SEKCJA:2 -->' % (cfg['miasto'], date.today(), lista))
     out = ai_complete(prompt, SYSTEM)
     if out and '<!-- SEKCJA:2 -->' in out and '<!-- /SEKCJA:2 -->' in out:
