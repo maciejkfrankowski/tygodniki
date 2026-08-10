@@ -94,6 +94,9 @@ def draft_for(cfg):
         return None
     
     lista = '\n'.join('- [%s] %s — %s' % (n, t, l) for n, t, l in nagl[:12])
+    print('=== NAGŁÓWKI DLA AI ===')
+    print(lista)
+    print('=== KONIEC NAGŁÓWKÓW ===')
     prompt = ('Miasto: %s. Data: %s.\nNagłówki z lokalnych źródeł:\n%s\n\n'
               'Zwróć WYŁĄCZNIE poniższy fragment HTML:\n'
               '<!-- SEKCJA:2 -->\n'
