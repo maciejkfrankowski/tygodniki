@@ -91,7 +91,10 @@ def load_city(cp):
 SYSTEM = ('Jesteś redaktorem lokalnego tygodnika w Polsce. Piszesz KONKRETNE, sąsiedzkie leady do 7 zdań. '
           'Styl: rzeczowy, apolityczny, "co się dzieje na ulicy obok". Zawsze podajesz klikalne źródło. '
           'Nie wymyślaj faktów — korzystaj wyłącznie z podanych nagłówków i linków. '
-          'Priorytet: newsy lokalne (dzielnica/miasto), nie ogólnopolskie.')
+          'Priorytet: newsy lokalne (dzielnica/miasto), nie ogólnopolskie. '
+          'ZAKAZ HALUCYNACJI: NIE WYMYŚLAJ nazw firm, sklepów, ulic, dat, godzin, liczb których nie ma w nagłówku. '
+          'Jeśli nagłówek mówi "serwisy rowerowe" bez nazw, pisz "lokalne serwisy rowerowe", nie wymyślaj nazw. '
+          'Jeśli nagłówek mówi "cukiernie" bez nazw, pisz "cukiernie w dzielnicy", nie wymyślaj nazw.')
 
 def draft_for(cfg):
     print(f'Pobieranie nagłówków dla: {cfg["miasto"]}')
